@@ -1,0 +1,38 @@
+setup:
+  dirs:
+    - "{snap_common}/etc/cinder/cinder.conf.d"
+    - "{snap_common}/etc/cinder/fernet-keys"
+    - "{snap_common}/etc/uwsgi"
+    - "{snap_common}/lib/cinder"
+    - "{snap_common}/lock/cinder"
+    - "{snap_common}/lock/snap-openstack"
+    - "{snap_common}/log/cinder"
+    - "{snap_common}/log/uwsgi"
+    - "{snap_common}/run/cinder"
+  symlinks:
+    "{snap_common}/etc/cinder": /etc/cinder
+    "{snap_common}/etc/uwsgi": /etc/uwsgi
+    "{snap_common}/lib/cinder": /var/lib/cinder
+    "{snap_common}/lock/cinder": /var/lock/cinder
+    "{snap_common}/lock/snap-openstack": /var/lock/snap-openstack
+    "{snap_common}/log/cinder": /var/log/cinder
+    "{snap_common}/log/uwsgi": /var/log/uwsgi
+    "{snap_common}/run/cinder": /var/run/cinder
+  templates:
+    cinder-snap.conf.j2: "{snap_common}/etc/cinder/cinder.conf.d/cinder-snap.conf"
+    admin.ini.j2: "{snap_common}/etc/uwsgi/cinder-admin.ini"
+    public.ini.j2: "{snap_common}/etc/uwsgi/cinder-public.ini"
+  copyfiles:
+    "{snap}/etc/cinder": "{snap_common}/etc/cinder"
+entry_points:
+  cinder-manage:
+    binary: cinder-manage
+    config-files:
+      - "/etc/cinder/cinder.conf"
+    config-dirs:
+      - "/etc/cinder/cinder.conf.d"
+  cinder-api:
+    type: uwsgi
+    uwsgi-dir: "/etc/uwsgi"
+    log-file: "/var/log/uwsgi/cinder.log"
+

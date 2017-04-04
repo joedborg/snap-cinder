@@ -1,0 +1,76 @@
+name: cinder
+version: ocata
+summary: OpenStack Block Storage (cinder)
+description: |
+  Cinder is a Block Storage service for OpenStack. It's designed to
+  present storage resources to end users that can be consumed by
+  the OpenStack Compute Project (Nova). This is done through the
+  use of either a reference implementation (LVM) or plugin drivers
+  for other storage. The short description of Cinder is that it
+  virtualizes the management of block storage devices and provides
+  end users with a self service API to request and consume those
+  resources without requiring any knowledge of where their storage
+  is actually deployed or on what type of device.
+confinement: classic
+grade: devel
+
+apps:
+  api:
+    command: bin/snap-openstack cinder-api
+    daemon: simple
+  backup:
+    command: bin/snap-openstack cinder-backup
+    daemon: simple
+  manage:
+    command: bin/snap-openstack cinder-manage
+  rootwrap:
+    command: bin/snap-openstack cinder-rootwrap
+  rtstool:
+    command: bin/snap-openstack cinder-rtstool
+  scheduler:
+    command: bin/snap-openstack cinder-scheduler
+    daemon: simple
+  volume:
+    command: bin/snap-openstack cinder-volume
+    daemon: simple
+  volume-usage-audit:
+    command: bin/snap-openstack cinder-volume-usage-audit
+    daemon: simple
+  wsgi:
+    command: bin/snap-openstack cinder-wsgi
+    daemon: simple
+
+parts:
+  cinder:
+    plugin: python
+    python-version: python2
+    source: http://tarballs.openstack.org/cinder/cinder-stable-ocata.tar.gz
+    python-packages:
+      - git+https://github.com/openstack/snap.openstack#egg=snap.openstack
+    constraints: https://raw.githubusercontent.com/openstack/requirements/master/upper-constraints.txt
+    build-packages:
+      - libffi-dev
+      - libssl-dev
+      - gcc
+  templates:
+    after:
+      - cinder
+    plugin: dump
+    source: snap
+  config:
+    after:
+      - cinder
+    plugin: dump
+    source: http://tarballs.openstack.org/cinder/cinder-stable-ocata.tar.gz
+    organize:
+      etc/*.conf: etc/cinder/
+      etc/*.ini: etc/cinder/
+      etc/*.json: etc/cinder/
+    filesets:
+      etc:
+        - etc/cinder/*.conf
+        - etc/cinder/*.ini
+        - etc/cinder/*.json
+    stage: [$etc]
+    prime: [$etc]
+

@@ -1,18 +1,16 @@
 setup:
   install: classic
   dirs:
-    - /etc/cinder
-    - /etc/uwsgi
-    - /var/lib/cinder
-    - /var/lock/cinder
-    - /var/lock/snap-openstack
-    - /var/log/cinder
-    - /var/log/uwsgi
-    - /var/run/cinder
+    - "/etc/cinder/conf.d"
+    - "/etc/uwsgi"
+    - "/var/lib/cinder"
+    - "/var/lock/cinder"
+    - "/var/lock/snap-openstack"
+    - "/var/log/cinder"
+    - "/var/log/uwsgi"
+    - "/var/run/cinder"
   templates:
-    cinder-snap.conf.j2: "/etc/cinder/cinder.conf.d/cinder-snap.conf"
-    admin.ini.j2: "/etc/uwsgi/cinder-admin.ini"
-    public.ini.j2: "/etc/uwsgi/cinder-public.ini"
+    cinder-snap.conf.j2: "/etc/cinder/conf.d/cinder-snap.conf"
   copyfiles:
     "{snap}/etc/cinder": "/etc/cinder"
 entry_points:
@@ -21,7 +19,7 @@ entry_points:
     config-files:
       - "/etc/cinder/cinder.conf"
     config-dirs:
-      - "/etc/cinder/cinder.conf.d"
+      - "/etc/cinder/conf.d"
   cinder-api:
     type: uwsgi
     uwsgi-dir: "/etc/uwsgi"
